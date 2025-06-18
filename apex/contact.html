@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Professional Contact Form</title>
+<style>
+  /* Reset & base */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background: #f7f8fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .contact-wrapper {
+    background: #fff;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.1);
+    padding: 40px 32px;
+  }
+
+  h1 {
+    margin: 0 0 28px;
+    font-weight: 600;
+    font-size: 1.75rem;
+    color: #222;
+    text-align: center;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Input container */
+  .input-group {
+    position: relative;
+  }
+
+  input, textarea {
+    font-size: 1rem;
+    width: 100%;
+    border: 1.8px solid #d1d5db;
+    border-radius: 8px;
+    padding: 16px 16px 16px 16px;
+    background-color: #fff;
+    color: #222;
+    outline-offset: 2px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    resize: none;
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: #2563eb; /* blue-600 */
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.3);
+  }
+
+  label {
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    background: white;
+    padding: 0 6px;
+    font-size: 1rem;
+    color: #6b7280; /* gray-500 */
+    pointer-events: none;
+    transition: all 0.25s ease;
+    border-radius: 4px;
+  }
+
+  /* Float label when focused or has text */
+  input:focus + label,
+  input:not(:placeholder-shown) + label,
+  textarea:focus + label,
+  textarea:not(:placeholder-shown) + label {
+    top: -8px;
+    left: 12px;
+    font-size: 0.75rem;
+    color: #2563eb;
+    font-weight: 600;
+  }
+
+  /* Validation error styles */
+  input:invalid:not(:focus):not(:placeholder-shown),
+  textarea:invalid:not(:focus):not(:placeholder-shown) {
+    border-color: #dc2626; /* red-600 */
+  }
+
+  input:invalid:not(:focus):not(:placeholder-shown) + label,
+  textarea:invalid:not(:focus):not(:placeholder-shown) + label {
+    color: #dc2626;
+  }
+
+  /* Error messages */
+  .error-message {
+    font-size: 0.85rem;
+    color: #dc2626;
+    margin-top: 4px;
+    display: none;
+  }
+
+  .error-visible {
+    display: block;
+  }
+
+  button {
+    background-color: #2563eb;
+    border: none;
+    border-radius: 8px;
+    padding: 16px 0;
+    font-weight: 600;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgb(37 99 235 / 0.4);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    user-select: none;
+  }
+
+  button:disabled {
+    background-color: #a5b4fc;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  button:not(:disabled):hover {
+    background-color: #1e40af;
+    box-shadow: 0 10px 24px rgb(30 64 175 / 0.6);
+  }
+
+  /* Success Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #22c55e;
+    color: white;
+    padding: 16px 28px;
+    border-radius: 24px;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 8px 24px rgb(34 197 94 / 0.6);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    user-select: none;
+  }
+
+  .toast.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .toast svg {
+    width: 20px;
+    height: 20px;
+    stroke: white;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 440px) {
+    .contact-wrapper {
+      padding: 30px 20px;
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+  <section class="contact-wrapper" aria-label="Contact form section">
+    <h1>Get in Touch</h1>
+    <form id="contactForm" novalidate>
+      <div class="input-group">
+        <input
+          type="text"
+          id="name"
+          name="name"
+          placeholder=" "
+          required
+          minlength="2"
+          aria-describedby="nameError"
+        />
+        <label for="name">Name</label>
+        <p class="error-message" id="nameError" aria-live="polite"></p>
+      </div>
+      <div class="input-group">
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder=" "
+          required
+          aria-describedby="emailError"
+        />
+        <label for="email">Email</label>
+        <p class="error-message" id="emailError" aria-live="polite"></p>
+      </div>
+      <div class="input-group">
+        <textarea
+          id="message"
+          name="message"
+          rows="4"
+          placeholder=" "
+          required
+          minlength="10"
+          aria-describedby="messageError"
+        ></textarea>
+        <label for="message">Message</label>
+        <p class="error-message" id="messageError" aria-live="polite"></p>
+      </div>
+      <button type="submit" id="submitBtn">Send</button>
+    </form>
+  </section>
+
+  <div class="toast" role="alert" aria-live="assertive" id="toast">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    Message sent successfully!
+  </div>
+
+<script>
+  const form = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const toast = document.getElementById('toast');
+
+  const nameInput = form.name;
+  const emailInput = form.email;
+  const messageInput = form.message;
+
+  const nameError = document.getElementById('nameError');
+  const emailError = document.getElementById('emailError');
+  const messageError = document.getElementById('messageError');
+
+  function validateEmail(email) {
+    // RFC 5322 simplified regex
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email.toLowerCase());
+  }
+
+  function showError(input, messageElem, message) {
+    messageElem.textContent = message;
+    messageElem.classList.add('error-visible');
+    input.setAttribute('aria-invalid', 'true');
+  }
+
+  function clearError(input, messageElem) {
+    messageElem.textContent = '';
+    messageElem.classList.remove('error-visible');
+    input.removeAttribute('aria-invalid');
+  }
+
+  function validateField() {
+    let isValid = true;
+
+    // Name validation
+    if (nameInput.value.trim().length < 2) {
+      showError(nameInput, nameError, 'Please enter your full name');
+      isValid = false;
+    } else {
+      clearError(nameInput, nameError);
+    }
+
+    // Email validation
+    if (!validateEmail(emailInput.value.trim())) {
+      showError(emailInput, emailError, 'Please enter a valid email address');
+      isValid = false;
+    } else {
+      clearError(emailInput, emailError);
+    }
+
+    // Message validation
+    if (messageInput.value.trim().length < 10) {
+      showError(messageInput, messageError, 'Message should be at least 10 characters');
+      isValid = false;
+    } else {
+      clearError(messageInput, messageError);
+    }
+
+    return isValid;
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    if (!validateField()) return;
+
+    // Disable button & show sending state
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+
+    // Simulate sending
+    setTimeout(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send';
+      form.reset();
+
+      // Show toast
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }, 1500);
+  });
+
+  // Real-time validation on input
+  [nameInput, emailInput, messageInput].forEach(input => {
+    input.addEventListener('input', () => {
+      validateField();
+    });
+  });
+</script>
+</body>
+</html>
